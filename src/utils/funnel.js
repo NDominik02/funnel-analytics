@@ -16,7 +16,18 @@ export function calculateStepMetrics(step) {
     stepConversionRate: safeDivide(proceeds, views),
     dropOffCount,
     dropOffRate: safeDivide(dropOffCount, views),
+    absoluteDropOff: views - proceeds,
   }
+}
+
+export function enrichStepsWithAnalytics(steps) {
+  return steps.map((step, index) => ({
+    ...step,
+    absoluteDropOff: (step.views ?? 0) - (step.proceeds ?? 0),
+    deltaFromPrev:
+      index === 0 ? 0 : (step.views ?? 0) - (steps[index - 1].views ?? 0),
+    isLastStep: index === steps.length - 1,
+  }))
 }
 
 export function enrichStepsWithWorstStep(steps) {
@@ -39,7 +50,8 @@ export function enrichStepsWithWorstStep(steps) {
 export function calculateCampaignMetrics(campaign) {
   const rawSteps = Array.isArray(campaign.steps) ? campaign.steps : []
   const processedSteps = rawSteps.map(calculateStepMetrics)
-  const steps = enrichStepsWithWorstStep(processedSteps)
+  const stepsWithAnalytics = enrichStepsWithAnalytics(processedSteps)
+  const steps = enrichStepsWithWorstStep(stepsWithAnalytics)
   const firstStep = steps[0]
   const lastStep = steps[steps.length - 1]
   const totalVisitors = firstStep?.views ?? 0
@@ -47,7 +59,7 @@ export function calculateCampaignMetrics(campaign) {
   const overallConversionRate = safeDivide(totalCompleted, totalVisitors)
   const worstStep = steps.find((step) => step.isWorstStep) ?? null
 
-  return {
+  const processedCampaign = {
     id: campaign.id,
     name: campaign.name,
     device: campaign.device,
@@ -56,33 +68,55 @@ export function calculateCampaignMetrics(campaign) {
     overallConversionRate,
     steps,
     worstStep,
-    insights: getInsights({ device: campaign.device, steps, worstStep }),
   }
+
+  processedCampaign.insights = getInsights(processedCampaign)
+
+  return processedCampaign
 }
 
 export function getInsights(campaign) {
+  const { steps = [], device, overallConversionRate = 0 } = campaign
+
+  if (!steps.length) {
+    return []
+  }
+
+  const worstStepIndex = steps.findIndex((step) => step.isWorstStep)
+
+  if (worstStepIndex === -1) {
+    return []
+  }
+
   const insights = []
-  const { worstStep, steps = [], device } = campaign
 
-  if (worstStep?.type === "email" && worstStep.dropOffRate > 0.6) {
+  if (worstStepIndex === 0) {
     insights.push(
-      "The email form likely creates too much friction. Consider reducing required fields."
+      "The entry step loses most visitors before they see the rest of the funnel. Test a different offer, headline, or trigger timing."
+    )
+  } else if (worstStepIndex === steps.length - 1) {
+    insights.push(
+      "Users drop off right before completion. Consider reducing friction — fewer fields, clearer CTA, or stronger incentive."
+    )
+  } else {
+    insights.push(
+      "The biggest drop happens mid-funnel, after users already showed interest. Check if this step matches what the previous one promised."
     )
   }
 
-  if (
-    steps[0]?.stepConversionRate > 0.25 &&
-    steps[1] &&
-    steps[1].dropOffRate > 0.6
-  ) {
+  if (device === "mobile") {
     insights.push(
-      "The teaser works, but the next step may not match user expectations. Review copy continuity between steps."
+      "Mobile users may face additional friction. Consider larger inputs or a shorter form."
+    )
+  } else {
+    insights.push(
+      "A/B test the copy and CTA on the worst-performing step to identify what's causing the drop-off."
     )
   }
 
-  if (device === "mobile" && worstStep?.type === "email") {
+  if (overallConversionRate < 0.05) {
     insights.push(
-      "Mobile users face higher form friction. Consider a shorter form or larger inputs."
+      "Overall conversion is below 5%. Even small improvements at the worst step will have a significant impact on total completions."
     )
   }
 
