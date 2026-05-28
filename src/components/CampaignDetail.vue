@@ -3,7 +3,7 @@
     <header class="flex flex-col gap-2 sm:flex-row sm:items-center">
       <h2 class="text-lg font-semibold text-neutral-800 md:text-xl">{{ campaign.name }}</h2>
       <span
-        class="shrink-0 rounded-full px-2.5 py-1 text-xs"
+        class="shrink-0 rounded-full px-2 py-0.5 text-xs"
         :class="
           campaign.device === 'mobile'
             ? 'bg-teal-50 text-teal-700'
@@ -19,7 +19,7 @@
     <ProblemStepAlert :worst-step="campaign.worstStep" />
 
     <section>
-      <h3 class="mb-3 text-sm uppercase tracking-wide text-neutral-500">
+      <h3 class="mb-3 text-sm font-medium text-neutral-500">
         Funnel Steps
       </h3>
       <div class="space-y-3">

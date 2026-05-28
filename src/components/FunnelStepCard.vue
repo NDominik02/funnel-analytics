@@ -35,7 +35,8 @@
     <div class="mt-4">
       <div class="h-2 w-full rounded-full bg-neutral-100">
         <div
-          class="h-full rounded-full bg-teal-600"
+          class="h-full rounded-full"
+          :class="step.isWorstStep ? 'bg-amber-400' : 'bg-teal-600'"
           :style="{ width: `${relativeWidth}%` }"
         />
       </div>

@@ -2,14 +2,9 @@
   <button
     type="button"
     class="relative w-full overflow-hidden rounded-lg border border-black/8 bg-white p-4 text-left shadow-sm transition-colors hover:bg-neutral-50"
-    :class="isSelected ? 'bg-[#f0f9f9]' : ''"
+    :class="isSelected ? 'bg-teal-50' : ''"
     @click="emit('select', campaign.id)"
   >
-    <div
-      v-if="isSelected"
-      class="absolute inset-y-0 left-0 w-[3px] bg-teal-700"
-    />
-
     <div class="flex items-start justify-between gap-4">
       <div class="min-w-0">
         <p
