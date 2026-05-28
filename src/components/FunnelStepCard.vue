@@ -7,7 +7,7 @@
       </div>
       <span
         v-if="step.isWorstStep"
-        class="rounded-md bg-[#fef9ee] px-2 py-1 text-xs font-medium text-amber-700"
+        class="shrink-0 whitespace-nowrap rounded-md bg-[#fef9ee] px-2 py-1 text-xs font-medium text-amber-700"
       >
         Biggest drop-off
       </span>
@@ -15,19 +15,19 @@
 
     <div class="mt-4 grid grid-cols-2 gap-4 md:grid-cols-4">
       <div>
-        <p class="text-xs uppercase tracking-wide text-neutral-500">Views</p>
+        <p class="text-xs font-normal text-neutral-400">views</p>
         <p class="mt-1 text-sm font-medium text-neutral-700">{{ viewsLabel }}</p>
       </div>
       <div>
-        <p class="text-xs uppercase tracking-wide text-neutral-500">Proceeds</p>
+        <p class="text-xs font-normal text-neutral-400">proceeds</p>
         <p class="mt-1 text-sm font-medium text-neutral-700">{{ proceedsLabel }}</p>
       </div>
       <div>
-        <p class="text-xs uppercase tracking-wide text-neutral-500">Step Conversion</p>
+        <p class="text-xs font-normal text-neutral-400">step conversion</p>
         <p class="mt-1 text-sm font-medium text-neutral-700">{{ conversionLabel }}</p>
       </div>
       <div>
-        <p class="text-xs uppercase tracking-wide text-neutral-500">Drop-off</p>
+        <p class="text-xs font-normal text-neutral-400">drop-off</p>
         <p class="mt-1 text-sm font-medium text-neutral-700">{{ dropOffLabel }}</p>
       </div>
     </div>
@@ -35,7 +35,8 @@
     <div class="mt-4">
       <div class="h-2 w-full rounded-full bg-neutral-100">
         <div
-          class="h-full rounded-full bg-teal-600"
+          class="h-full rounded-full"
+          :class="step.isWorstStep ? 'bg-amber-400' : 'bg-teal-600'"
           :style="{ width: `${relativeWidth}%` }"
         />
       </div>
