@@ -1,7 +1,7 @@
 <template>
   <button
     type="button"
-    class="relative w-full overflow-hidden rounded-lg border border-black/8 bg-white p-4 text-left shadow-sm transition-colors hover:bg-neutral-50"
+    class="campaign-list-item relative w-full overflow-hidden rounded-lg border border-black/8 bg-white p-4 text-left shadow-sm transition-colors hover:bg-neutral-50"
     :class="isSelected ? 'md:bg-[#f0fdf4] md:hover:bg-[#f0fdf4]' : ''"
     @click="emit('select', campaign.id)"
   >
@@ -35,6 +35,14 @@
         <p class="mt-1 text-sm text-neutral-600">{{ stepCountLabel }}</p>
       </div>
     </div>
+
+    <p
+      v-if="showWorstStepBadge"
+      class="mt-2 text-xs"
+      style="color: var(--color-orange)"
+    >
+      ⚠ {{ worstStepBadgeText }}
+    </p>
   </button>
 </template>
 
@@ -65,4 +73,23 @@ const stepCountLabel = computed(() => {
   const stepCount = Array.isArray(props.campaign.steps) ? props.campaign.steps.length : 0
   return `${stepCount} steps`
 })
+
+const showWorstStepBadge = computed(
+  () => (props.campaign.worstStep?.dropOffRate ?? 0) > 0.5
+)
+
+const worstStepBadgeText = computed(() => {
+  const worstStep = props.campaign.worstStep
+  if (!worstStep) {
+    return ""
+  }
+
+  return `${worstStep.name} — ${formatPercent(worstStep.dropOffRate)} drop-off`
+})
 </script>
+
+<style scoped>
+.campaign-list-item {
+  --color-orange: #ea580c;
+}
+</style>

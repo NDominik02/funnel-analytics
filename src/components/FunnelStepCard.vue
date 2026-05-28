@@ -13,7 +13,7 @@
       </span>
     </div>
 
-    <div class="mt-4 grid grid-cols-2 gap-4 md:grid-cols-4">
+    <div class="mt-4 grid grid-cols-2 gap-4 md:grid-cols-5">
       <div>
         <p class="text-xs font-normal text-neutral-400">views</p>
         <p class="mt-1 text-sm font-medium text-neutral-700">{{ viewsLabel }}</p>
@@ -30,15 +30,38 @@
         <p class="text-xs font-normal text-neutral-400">drop-off</p>
         <p class="mt-1 text-sm font-medium text-neutral-700">{{ dropOffLabel }}</p>
       </div>
+      <div v-if="!step.isLastStep">
+        <p class="text-xs font-normal text-neutral-400">lost users</p>
+        <p
+          class="mt-1 text-sm font-medium"
+          style="color: var(--color-text-muted)"
+        >
+          {{ lostUsersLabel }}
+        </p>
+      </div>
     </div>
 
     <div class="mt-4">
       <div class="h-2 w-full rounded-full bg-neutral-100">
         <div
-          class="h-full rounded-full"
-          :class="step.isWorstStep ? 'bg-amber-400' : 'bg-teal-600'"
+          class="funnel-progress flex h-full overflow-hidden rounded-full"
           :style="{ width: `${relativeWidth}%` }"
-        />
+        >
+          <div
+            class="h-full"
+            :style="{
+              width: `${proceedsSegmentPercent}%`,
+              background: proceedsSegmentColor,
+            }"
+          />
+          <div
+            class="h-full"
+            :style="{
+              width: `${dropOffSegmentPercent}%`,
+              background: dropOffSegmentColor,
+            }"
+          />
+        </div>
       </div>
     </div>
   </article>
@@ -63,6 +86,9 @@ const viewsLabel = computed(() => formatNumber(props.step.views ?? 0))
 const proceedsLabel = computed(() => formatNumber(props.step.proceeds ?? 0))
 const conversionLabel = computed(() => formatPercent(props.step.stepConversionRate ?? 0))
 const dropOffLabel = computed(() => formatPercent(props.step.dropOffRate ?? 0))
+const lostUsersLabel = computed(() =>
+  formatNumber(props.step.absoluteDropOff ?? 0)
+)
 
 const relativeWidth = computed(() => {
   if (!props.firstStepViews) {
@@ -72,4 +98,33 @@ const relativeWidth = computed(() => {
   const width = ((props.step.views ?? 0) / props.firstStepViews) * 100
   return Math.max(0, Math.min(100, Number(width.toFixed(1))))
 })
+
+const proceedsSegmentPercent = computed(() => {
+  const views = props.step.views ?? 0
+  if (!views) {
+    return 0
+  }
+
+  const percent = ((props.step.proceeds ?? 0) / views) * 100
+  return Math.max(0, Math.min(100, Number(percent.toFixed(1))))
+})
+
+const dropOffSegmentPercent = computed(() =>
+  Number((100 - proceedsSegmentPercent.value).toFixed(1))
+)
+
+const proceedsSegmentColor = computed(() =>
+  props.step.isWorstStep ? "#f59e0b" : "var(--color-primary)"
+)
+
+const dropOffSegmentColor = computed(() =>
+  props.step.isWorstStep ? "#fef3c7" : "#d1fae5"
+)
 </script>
+
+<style scoped>
+.funnel-progress {
+  --color-primary: #0d9488;
+  --color-text-muted: #737373;
+}
+</style>
