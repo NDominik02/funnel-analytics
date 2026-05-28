@@ -13,7 +13,7 @@
     <div class="flex items-start justify-between gap-4">
       <div class="min-w-0">
         <p
-          class="truncate text-neutral-900"
+          class="whitespace-normal wrap-break-word text-neutral-900"
           :class="isSelected ? 'font-semibold' : 'font-medium'"
         >
           {{ campaign.name }}
