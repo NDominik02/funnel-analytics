@@ -1,6 +1,6 @@
 <template>
-  <div class="min-h-screen bg-neutral-50 p-6 md:p-8">
-    <div class="mx-auto grid max-w-7xl gap-6 lg:grid-cols-[320px_1fr]">
+  <div class="min-h-screen bg-neutral-50">
+    <div class="mx-auto grid max-w-7xl grid-cols-1 gap-6 p-4 md:grid-cols-[320px_1fr] md:p-8">
       <CampaignList
         :campaigns="campaigns"
         :selectedId="selectedCampaign?.id"

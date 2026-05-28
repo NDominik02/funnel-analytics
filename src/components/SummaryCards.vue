@@ -1,6 +1,6 @@
 <template>
   <section class="grid grid-cols-1 gap-3 md:grid-cols-3">
-    <article class="rounded-lg border border-black/8 bg-white p-4 shadow-sm">
+    <article class="rounded-lg border border-black/8 bg-white p-3 shadow-sm md:p-4">
       <p class="text-xs uppercase tracking-wide text-neutral-500">
         Overall Conversion
       </p>
@@ -9,7 +9,7 @@
       </p>
     </article>
 
-    <article class="rounded-lg border border-black/8 bg-white p-4 shadow-sm">
+    <article class="rounded-lg border border-black/8 bg-white p-3 shadow-sm md:p-4">
       <p class="text-xs uppercase tracking-wide text-neutral-500">
         Total Visitors
       </p>
@@ -18,7 +18,7 @@
       </p>
     </article>
 
-    <article class="rounded-lg border border-black/8 bg-white p-4 shadow-sm">
+    <article class="rounded-lg border border-black/8 bg-white p-3 shadow-sm md:p-4">
       <p class="text-xs uppercase tracking-wide text-neutral-500">
         Biggest Drop-off
       </p>

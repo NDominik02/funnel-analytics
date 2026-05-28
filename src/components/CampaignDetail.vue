@@ -1,9 +1,9 @@
 <template>
   <section class="space-y-6">
-    <header class="flex items-center gap-3">
-      <h2 class="text-xl font-semibold text-neutral-800">{{ campaign.name }}</h2>
+    <header class="flex flex-col gap-2 sm:flex-row sm:items-center">
+      <h2 class="text-lg font-semibold text-neutral-800 md:text-xl">{{ campaign.name }}</h2>
       <span
-        class="rounded-full px-2.5 py-1 text-xs"
+        class="shrink-0 rounded-full px-2.5 py-1 text-xs"
         :class="
           campaign.device === 'mobile'
             ? 'bg-teal-50 text-teal-700'
